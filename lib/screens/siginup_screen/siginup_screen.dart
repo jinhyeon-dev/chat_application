@@ -8,6 +8,10 @@ class SiginUpScreen extends StatefulWidget {
 }
 
 class _SiginUpScreenState extends State<SiginUpScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,9 +20,20 @@ class _SiginUpScreenState extends State<SiginUpScreen> {
           padding: EdgeInsets.all(10),
           child: Column(
             children: [
-              TextField(),
-              TextField(),
-              TextField(),
+              TextField(
+                controller: _emailController,
+              ),
+              TextField(
+                controller: _passwordController,
+              ),
+              TextField(
+                controller: _nameController,
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text("회원가입"),
+              ),
             ],
           ),
         ),
