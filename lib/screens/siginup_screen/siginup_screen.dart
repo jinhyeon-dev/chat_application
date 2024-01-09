@@ -1,3 +1,4 @@
+import 'package:chat_application/screens/signin_screen/signin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -45,6 +46,10 @@ class _SiginUpScreenState extends State<SiginUpScreen> {
                       await value.user?.updateDisplayName(name);
                       FirebaseAuth.instance.signOut();
                     },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignInScreen()),
                   );
                 },
                 child: Text("회원가입"),
