@@ -10,6 +10,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final TextEditingController _messageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,21 +26,52 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: StreamBuilder(
-          stream: FirebaseDatabase.instance.ref().child('chats').onValue,
-          builder: (context, snapshot) {
-            List data = (snapshot.data?.snapshot.value ?? []) as List;
+        child: Column(
+          children: [
+            StreamBuilder(
+              stream: FirebaseDatabase.instance.ref().child('chats').onValue,
+              builder: (context, snapshot) {
+                Map result = (snapshot.data?.snapshot.value ?? []) as Map;
+                List data = result.entries.map((e) => e.value).toList();
 
-            print(data);
+                print(data);
 
-            return ListView.builder(
-              itemBuilder: (context, index) => ListTile(
-                title: Text(data[index]['message']),
-                subtitle: Text(data[index]['name']),
-              ),
-              itemCount: data.length,
-            );
-          },
+                return Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) => ListTile(
+                      title: Text(data[index]['message']),
+                      subtitle: Text(data[index]['name']),
+                    ),
+                    itemCount: data.length,
+                  ),
+                );
+              },
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    User user = FirebaseAuth.instance.currentUser!;
+                    FirebaseDatabase.instance.ref().child('chats').update({
+                      '${user.uid}:${DateTime.now().millisecondsSinceEpoch}': {
+                        'uid': user.uid,
+                        'name': user.displayName,
+                        'message': _messageController.text
+                      }
+                    });
+                    FocusScope.of(context).unfocus();
+                    _messageController.clear();
+                  },
+                  child: const Text("전송"),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
