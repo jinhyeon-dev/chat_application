@@ -47,12 +47,30 @@ class _MainScreenState extends State<MainScreen> {
                             : CrossAxisAlignment.start,
                         children: [
                           Text(data[index]['name']),
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Text(
-                                data[index]['message'],
-                                style: Theme.of(context).textTheme.titleMedium,
+                          GestureDetector(
+                            onLongPress: () {
+
+                              if (user.uid != data[index]['uid']) return;
+
+                              FirebaseDatabase.instance
+                                  .ref()
+                                  .child('chats')
+                                  .update({
+                                '${(index - (data.length - 1)).abs()}': {
+                                  'uid': user.uid,
+                                  'name': user.displayName,
+                                  'message': null,
+                                }
+                              });
+                            },
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Text(
+                                  data[index]['message'] ?? "삭제된 메세지입니다.",
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
                               ),
                             ),
                           ),
