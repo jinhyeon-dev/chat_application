@@ -25,9 +25,11 @@ class _MainScreenState extends State<MainScreen> {
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: StreamBuilder(
-          stream: FirebaseDatabase.instance.ref().child("chats").onValue,
+          stream: FirebaseDatabase.instance.ref().child('chats').onValue,
           builder: (context, snapshot) {
             List data = (snapshot.data?.snapshot.value ?? []) as List;
+
+            print(data);
 
             return ListView.builder(
               itemBuilder: (context, index) => ListTile(
