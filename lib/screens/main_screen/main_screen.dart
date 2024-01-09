@@ -14,6 +14,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    User user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       appBar: AppBar(
         title: const Text("채팅룸"),
@@ -39,10 +40,25 @@ class _MainScreenState extends State<MainScreen> {
                 return Expanded(
                   child: ListView.builder(
                     reverse: true,
-                    itemBuilder: (context, index) => ListTile(
-                      title: Text(data[index]['message']),
-                      subtitle: Text(data[index]['name']),
-                    ),
+                    itemBuilder: (context, index) {
+                      return Column(
+                        crossAxisAlignment: user.uid == data[index]['uid']
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
+                        children: [
+                          Text(data[index]['name']),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                data[index]['message'],
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                     itemCount: data.length,
                   ),
                 );
