@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -22,8 +23,21 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(10),
-        child: StreamBuilder(stream: , builder: ,),
+        padding: const EdgeInsets.all(10),
+        child: StreamBuilder(
+          stream: FirebaseDatabase.instance.ref().child("chats").onValue,
+          builder: (context, snapshot) {
+            List data = (snapshot.data?.snapshot.value ?? []) as List;
+
+            return ListView.builder(
+              itemBuilder: (context, index) => ListTile(
+                title: Text(data[index]['message']),
+                subtitle: Text(data[index]['name']),
+              ),
+              itemCount: data.length,
+            );
+          },
+        ),
       ),
     );
   }
