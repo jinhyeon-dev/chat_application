@@ -1,3 +1,4 @@
+import 'package:chat_application/screens/siginup_screen/siginup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -37,11 +38,16 @@ class _SignInScreenState extends State<SignInScreen> {
                     password: password,
                   );
                 },
-                child: Text("로그인"),
+                child: const Text("로그인"),
               ),
               ElevatedButton(
-                onPressed: () {},
-                child: Text("회원가입"),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SiginUpScreen(),
+                  ),
+                ),
+                child: const Text("회원가입"),
               ),
             ],
           ),

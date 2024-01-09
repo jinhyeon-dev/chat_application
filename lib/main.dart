@@ -24,13 +24,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: StreamBuilder(
+      home: StreamBuilder <User?>(
         stream: FirebaseAuth.instance.userChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            return const SignInScreen();
-          } else {
             return const Placeholder();
+          } else {
+            return const SignInScreen();
           }
         },
       ),

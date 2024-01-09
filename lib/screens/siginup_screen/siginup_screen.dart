@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SiginUpScreen extends StatefulWidget {
@@ -31,7 +32,21 @@ class _SiginUpScreenState extends State<SiginUpScreen> {
               ),
               Spacer(),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  String email = _emailController.text;
+                  String password = _passwordController.text;
+                  String name = _nameController.text;
+
+                  FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: email, password: password)
+                      .then(
+                    (value) async {
+                      await value.user?.updateDisplayName(name);
+                      FirebaseAuth.instance.signOut();
+                    },
+                  );
+                },
                 child: Text("회원가입"),
               ),
             ],
