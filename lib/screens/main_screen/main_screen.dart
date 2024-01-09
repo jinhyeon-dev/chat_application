@@ -31,13 +31,14 @@ class _MainScreenState extends State<MainScreen> {
             StreamBuilder(
               stream: FirebaseDatabase.instance.ref().child('chats').onValue,
               builder: (context, snapshot) {
-                Map result = (snapshot.data?.snapshot.value ?? []) as Map;
-                List data = result.entries.map((e) => e.value).toList();
+                List data = (snapshot.data?.snapshot.value ?? []) as List;
+                print(data); // log
 
-                print(data);
+                data = data.reversed.toList();
 
                 return Expanded(
                   child: ListView.builder(
+                    reverse: true,
                     itemBuilder: (context, index) => ListTile(
                       title: Text(data[index]['message']),
                       subtitle: Text(data[index]['name']),
@@ -55,17 +56,24 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     User user = FirebaseAuth.instance.currentUser!;
+                    DataSnapshot data = await FirebaseDatabase.instance
+                        .ref()
+                        .child('chats')
+                        .get();
+
                     FirebaseDatabase.instance.ref().child('chats').update({
-                      '${user.uid}:${DateTime.now().millisecondsSinceEpoch}': {
+                      '${data.children.length}': {
                         'uid': user.uid,
                         'name': user.displayName,
-                        'message': _messageController.text
+                        'message': _messageController.text,
                       }
                     });
-                    FocusScope.of(context).unfocus();
-                    _messageController.clear();
+                    if (context.mounted) {
+                      FocusScope.of(context).unfocus();
+                      _messageController.clear();
+                    }
                   },
                   child: const Text("전송"),
                 ),
