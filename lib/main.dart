@@ -1,3 +1,4 @@
+import 'package:chat_application/screens/signin_screen/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.userChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            return const Placeholder();
+            return const SignInScreen();
           } else {
             return const Placeholder();
           }
